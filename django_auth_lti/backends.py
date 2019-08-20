@@ -91,7 +91,7 @@ class LTIAuthBackend(ModelBackend):
         user = None
 
         # Retrieve username from LTI parameter or default to an overridable function return value
-        username = tool_provider.lis_person_sourcedid or self.get_default_username(
+        username = tool_provider.custom_canvas_user_login_id or tool_provider.lis_person_sourcedid or self.get_default_username(
             tool_provider, prefix=self.unknown_user_prefix)
         username = self.clean_username(username)  # Clean it
 
