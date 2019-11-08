@@ -89,10 +89,15 @@ class LTIAuthBackend(ModelBackend):
         # if we got this far, the user is good
 
         user = None
-
+        username = None
         # Retrieve username from LTI parameter or default to an overridable function return value
-        username = request.POST.get('custom_canvas_user_login_id') or tool_provider.lis_person_sourcedid or self.get_default_username(
-            tool_provider, prefix=self.unknown_user_prefix)
+        if request.POST.get('tool_consumer_info_product_family_code', None) == 'canvas':
+            username = request.POST.get('custom_canvas_user_login_id')
+        elif request.POST.get('tool_consumer_info_product_family_code', None) == 'desire2learn':
+            username = request.POST.get('ext_d2l_username')
+        if not username:
+            username = tool_provider.lis_person_sourcedid or self.get_default_username(tool_provider, prefix=self.unknown_user_prefix)
+
         username = self.clean_username(username)  # Clean it
 
         email = tool_provider.lis_person_contact_email_primary
