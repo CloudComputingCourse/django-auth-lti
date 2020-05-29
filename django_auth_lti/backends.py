@@ -95,8 +95,10 @@ class LTIAuthBackend(ModelBackend):
             username = request.POST.get('custom_canvas_user_login_id')
         elif request.POST.get('tool_consumer_info_product_family_code', None) == 'desire2learn':
             username = request.POST.get('ext_d2l_username')
+        elif request.POST.get('tool_consumer_info_product_family_code', None) in ['Blackboard Learn', 'BlackboardLearn']:
+            username = request.POST.get('lis_person_contact_email_primary')
         if not username:
-            username = tool_provider.lis_person_sourcedid or self.get_default_username(tool_provider, prefix=self.unknown_user_prefix)
+            username = tool_provider.lis_person_contact_email_primary or tool_provider.lis_person_sourcedid or self.get_default_username(tool_provider, prefix=self.unknown_user_prefix)
 
         username = self.clean_username(username)  # Clean it
 
